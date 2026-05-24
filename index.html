@@ -24,7 +24,7 @@
     button:hover{border-color:#8da0b6}
     button.active{background:var(--accent);border-color:var(--accent);color:#fff}
     button.icon{width:38px;padding:0;font-size:18px}
-    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
     .metric{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:11px 12px;box-shadow:0 8px 20px rgba(28,38,52,.06)}
     .metric .label{font-size:12px;color:var(--muted);font-weight:800}
     .metric .value{font-size:23px;font-weight:900;color:var(--accent);margin-top:2px}
@@ -37,21 +37,29 @@
     .phase-btn.active .phase-count{color:#dff8f4}
     .note{font-size:12px;color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:9px;margin-top:10px}
     section{display:grid;gap:12px}
-    .group{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 8px 20px rgba(28,38,52,.06)}
+    .group{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:visible;box-shadow:0 8px 20px rgba(28,38,52,.06)}
     .group-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 13px;background:#eef3f6;border-bottom:1px solid var(--line)}
     .group-title{margin:0;font-size:15px}
     .group-sub{font-size:12px;color:var(--muted)}
+    .group-summary{padding:7px 13px;border-bottom:1px solid var(--line);background:#f8fafc;color:#405061;font-size:12px;font-weight:750}
     .group-toggle{height:30px;padding:0 10px;font-size:12px;white-space:nowrap}
     .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:0;border-top:0}
-    .item{min-height:86px;display:grid;grid-template-columns:34px max-content minmax(0,1fr);gap:8px;align-items:start;padding:12px;border-right:1px solid #edf0f4;border-bottom:1px solid #edf0f4;background:#fff}
+    .item{position:relative;min-height:86px;display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:start;padding:12px;border-right:1px solid #edf0f4;border-bottom:1px solid #edf0f4;background:#fff}
+    .item:hover,.item:focus-within{z-index:20}
     .item.done{background:#f1faf5}
+    .item.physical{background:#fff1f1}
+    .item.physical.done{background:#f6e7e7}
+    .item.magical{background:#eef6ff}
+    .item.magical.done{background:#e4f0eb}
     .check{width:22px;height:22px;margin-top:7px;accent-color:var(--accent)}
+    .item-main{min-width:0}
+    .item-head{display:flex;align-items:flex-start;gap:8px;margin:0 0 4px}
     .iconbox{width:38px;height:38px;border:1px solid #cdd5df;border-radius:6px;background:#f7f9fb;display:flex;align-items:center;justify-content:center;overflow:hidden}
     .iconbox img{width:24px;height:24px;image-rendering:pixelated}
     .iconflow{display:flex;align-items:center;gap:4px}
     .arrow{font-size:15px;line-height:1;color:#6f7b87;font-weight:900}
     .missing-icon{font-size:10px;color:var(--muted);font-weight:800}
-    .name{font-size:14px;font-weight:850;line-height:1.25;margin:0 0 4px}
+    .name{font-size:14px;font-weight:850;line-height:1.25;margin:0;min-width:0}
     .meta{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 5px}
     .tag{display:inline-flex;align-items:center;border-radius:999px;background:var(--chip);color:#405061;padding:2px 7px;font-size:11px;font-weight:750}
     .tag.practice{background:#eaf1fb;color:var(--practice)}
@@ -60,6 +68,12 @@
     .tag.warn{background:#fff4db;color:var(--warn)}
     .tag.missing{background:#fdecec;color:var(--danger)}
     .desc{font-size:12px;color:var(--muted);margin:0}
+    .hover-detail{display:none}
+    .choice-options{display:grid;gap:6px;margin-top:8px}
+    .choice-option{display:grid;grid-template-columns:18px minmax(0,1fr);gap:7px;align-items:start;border:1px solid var(--line);border-radius:6px;background:var(--soft);padding:7px}
+    .choice-option input{width:16px;height:16px;margin:1px 0 0;accent-color:var(--accent)}
+    .choice-title{font-size:12px;font-weight:900;color:var(--text)}
+    .choice-desc{font-size:11px;color:var(--muted);margin-top:1px}
     .qty{font-weight:900;color:#243447}
     .empty{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:24px;color:var(--muted);text-align:center}
     .gate{position:fixed;inset:0;z-index:1000;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -70,16 +84,30 @@
     .gate-input{height:42px;border:1px solid #c8d0dc;border-radius:6px;padding:8px 10px;font-size:16px}
     .gate-error{min-height:18px;color:var(--danger);font-size:13px;font-weight:700}
     body.compact .items{grid-template-columns:repeat(auto-fill,minmax(172px,1fr))}
-    body.compact .item{min-height:58px;grid-template-columns:max-content minmax(0,1fr);gap:6px;align-items:center;padding:9px}
-    body.compact .check,body.compact .meta,body.compact .desc{display:none}
+    body.compact .item{min-height:58px;grid-template-columns:22px minmax(0,1fr);gap:7px;align-items:start;padding:9px;cursor:help}
+    body.compact .item:focus{outline:2px solid rgba(15,123,114,.35);outline-offset:-2px}
+    body.compact .check{display:block;width:18px;height:18px;margin:0}
+    body.compact .meta,body.compact .desc{display:none}
+    body.compact .choice-options{display:none}
     body.compact .name{margin:0;font-size:13px}
+    body.compact .item-head{align-items:flex-start;margin:0}
+    body.compact .iconflow{align-items:flex-start}
+    body.compact .iconflow .arrow{align-self:center}
+    body.compact .item:hover .hover-detail,body.compact .item:focus-within .hover-detail{display:block;position:absolute;left:8px;right:8px;top:calc(100% - 4px);z-index:30;background:#fff;border:1px solid #bec8d5;border-radius:8px;box-shadow:0 14px 34px rgba(23,33,45,.22);padding:10px;min-width:260px}
+    body.compact .item.tooltip-up:hover .hover-detail,body.compact .item.tooltip-up:focus-within .hover-detail{top:auto;bottom:calc(100% - 4px)}
+    body.compact .hover-detail .meta{display:flex;margin:0 0 7px}
+    body.compact .hover-detail .desc{display:block;color:var(--text);font-size:12px}
+    body.compact .hover-detail .choice-options{display:grid}
     body.compact .group-head{padding:8px 10px}
     body.compact .group.expanded .items{grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-    body.compact .group.expanded .item{min-height:86px;grid-template-columns:34px max-content minmax(0,1fr);gap:8px;align-items:start;padding:12px}
+    body.compact .group.expanded .item{min-height:86px;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:start;padding:12px}
     body.compact .group.expanded .check{display:block}
     body.compact .group.expanded .meta{display:flex}
     body.compact .group.expanded .desc{display:block}
     body.compact .group.expanded .name{margin:0 0 4px;font-size:14px}
+    body.compact .group.expanded .item-head{margin:0 0 4px}
+    body.compact .group.expanded .hover-detail{display:none}
+    body.compact .group.expanded .choice-options{display:grid}
     @media(max-width:900px){.toolbar{grid-template-columns:1fr}.layout{grid-template-columns:1fr}aside{position:static}.stats{grid-template-columns:1fr 1fr}}
     @media(max-width:560px){main{padding:12px}.items{grid-template-columns:1fr}.stats{grid-template-columns:1fr}h1{font-size:20px}}
   </style>
@@ -97,7 +125,7 @@
   </div>
   <header>
     <h1>Item Visual Checklist</h1>
-    <p>เตรียมของสำหรับ Reginleif 260 แยกตอนซ้อม vs ตอนแข่งจริง พร้อม icon จาก Divine Pride thROG</p>
+    <p>เตรียมของสำหรับ Reginleif 260 แยกตอนซ้อม vs ตอนแข่งจริง</p>
   </header>
   <main>
     <div class="toolbar">
@@ -156,77 +184,80 @@
       });
     }
     const items = [
-      {id:"booster-call", name:"Booster Call", img:"101473_booster_call.png", phase:"account", use:["race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:[], desc:"เปิดจาก Booster Pack (1)"},
-      {id:"silvervine-10", name:"Silvervine 10 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"10 ea / ผู้แข่ง", tags:[], desc:"ใช้รับ [6th] Anniversary Linny Lamp Service จาก NPC พลับพลึง ที่ ayothaya 202 204 หรือ /navi ayothaya 202/204"},
-      {id:"silvervine-1", name:"Silvervine 1 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"1-2 ea / ผู้แข่ง", tags:[], desc:"ใช้กด Unicorn Blessing Buff รอบแรก และเผื่อรอบหลัง 04:00"},
-      {id:"silvervine-class4", name:"Silvervine 100 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"optional", qty:"100 / คน", tags:["Class 4"], desc:"สำหรับผู้แข่งที่ต้องการข้ามเควสเปลี่ยน Class 4 ในวันแข่ง"},
+      {id:"silvervine-10", name:"Silvervine 10 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"10 ea / ผู้แข่ง", tags:[], desc:"ใช้รับตะเกียง [6th] Anniversary Linny Lamp Service จาก NPC พลับพลึง ที่ ayothaya 202 204 /navi ayothaya 202/204", silvervineCost:{requiredMin:10, requiredMax:10}},
+      {id:"silvervine-1", name:"Silvervine 2 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"2 ea / ผู้แข่ง", tags:[], desc:"ใช้กด Unicorn Blessing Buff ครั้งละ 1 ea 2 รอบ: รอบแรกและรอบหลัง 04:00", silvervineCost:{requiredMin:2, requiredMax:2}},
+      {id:"silvervine-class4", name:"Silvervine 100 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"optional", qty:"100 / คน", tags:["Class 4"], desc:"สำหรับผู้แข่งที่ต้องการข้ามเควสเปลี่ยน Class 4 ในวันแข่ง", silvervineCost:{optionalMin:100, optionalMax:100}},
+      {id:"premium-silvervine-choice", name:"Premium Staff EXP Buff", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"4 ea / ผู้แข่ง", tags:["Premium"], desc:"ทุกคนต้องใช้ Silvervine 4 ea กับ Premium Service Staff เพื่อเพิ่ม EXP +30% เป็นเวลา 1 วัน; ถ้าจะเอาบัฟอื่นเพิ่มให้เลือกตัวเลือกย่อย", choiceOptions:[
+        {id:"exp", label:"Silvervine 4 ea", desc:"บังคับ: เพิ่ม EXP +30% เป็นเวลา 1 วัน", silvervineCost:4},
+        {id:"all", label:"Silvervine 6 ea", desc:"เหมารวมทุกบัฟ Premium Service Staff: EXP, Drop, ลดบทลงโทษตอนตาย", silvervineCost:6},
+        {id:"drop", label:"Silvervine 2 ea", desc:"เพิ่ม Drop 1 วัน ถ้าทีมจะเอาบัฟ Drop ด้วย", silvervineCost:2},
+        {id:"death", label:"Silvervine 1 ea", desc:"ลดบทลงโทษตอนตาย 1 วัน", silvervineCost:1}
+      ]},
       {id:"clover", name:"[Event] New Adventure Clover", img:"420603_event_new_adventure_clover.png", phase:"account", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:["วันเปิด server"], desc:"รับตอน Lv 1 จาก Starhall ในวันเปิด server ก่อนแข่ง ถ้าจะใช้ EXP +10% ช่วงต้น"},
-      {id:"mini-poring", name:"Costume Mini Poring", img:"410193_costume_mini_poring.png", phase:"account", use:["race"], priority:"ยืนยัน", qty:"1 / ผู้แข่ง ถ้าใช้", tags:["วันเปิด server"], desc:"รับจาก NPC Remiel ก่อน Lv66 ที่ izlude 149 191 หรือ /navi izlude 149/191 ถ้าจะใช้กับคนยิง Comet"},
+      {id:"mini-poring", name:"Costume Mini Poring", img:"410193_costume_mini_poring.png", phase:"account", use:["race"], priority:"ยืนยัน", qty:"1 / ผู้แข่ง ถ้าใช้", tags:["วันเปิด server"], desc:"รับจาก NPC Remiel ก่อน Lv66 ที่ izlude 149 191 /navi izlude 149/191 ได้ Exp และสกิล Comet"},
       {id:"ayothaya-costume", name:"Costume Ayothaya Hat", img:"19557_costume_ayothaya_hat.png", phase:"account", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:["วันเปิด server"], desc:"ของที่เข้า rodex วันเปิด server ก่อนแข่ง; Base Lv 1-199 EXP +30%, หลัง 200 เหลือ +10%"},
-      {id:"ayothaya-helm", name:"Ayothaya Helm", img:"005312_ayothaya_kings_hat_ayothaya_helm_fallback.png", phase:"account", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:["วันเปิด server"], desc:"ของที่เข้า Rodex วันเปิด server ก่อนแข่ง ใช้เป็นหมวกจริงถ้า refine ทัน"},
+      {id:"ayothaya-helm", name:"Ayothaya Helm", img:"005312_ayothaya_kings_hat_ayothaya_helm_fallback.png", phase:"account", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:["วันเปิด server"], desc:"ของที่เข้า Rodex วันเปิด server ก่อนแข่ง ใช้สำหรับคนที่ไม่มีหมวก Cat Paw"},
       {id:"lek-lai", name:"เหล็กไหลอโยธยา", img:"25731_zelunium_lek_lai_ayothaya.png", phase:"account", use:["race"], priority:"required", qty:"ตาม refine", tags:["วันเปิด server"], desc:"ใช้ตีบวก Ayothaya Helm เป้า +7 / +9 / +11"},
       {id:"linny-lamp", name:"[6th] Anniversary Linny Lamp Service", img:"006627_genie_lamp_linny_lamp_service.png", phase:"account", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:[], desc:"ตะเกียงเรียก Linny สำหรับ All In One Potion และ Unicorn Blessing Buff"},
-      {id:"premium", name:"Premium Service Box", img:"23207_premium_service_box.png", img2:"23165_premium_service_staff.png", phase:"account", use:["race"], priority:"required", qty:"1 ชิ้น", tags:[], desc:"เปิดกล่องแล้วได้ Premium Service Staff; กดบัฟก่อนแข่งได้เลยเพราะอยู่ 1 วัน"},
-      {id:"silvervine-premium-exp", name:"Silvervine 4 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"required", qty:"4 / ผู้แข่ง", tags:[], desc:"ใช้กับ Premium Service Staff เพื่อเพิ่ม EXP +30% เป็นเวลา 1 วัน"},
-      {id:"silvervine-premium-drop", name:"Silvervine 2 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"optional", qty:"2 / ผู้แข่ง", tags:[], desc:"ใช้กับ Premium Service Staff เพื่อเพิ่ม Drop 1 วัน ถ้าทีมจะเอาบัฟ Drop ด้วย"},
-      {id:"silvervine-death", name:"Silvervine 1 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"optional", qty:"1 / ผู้แข่ง", tags:[], desc:"ใช้กับ Premium Service Staff เพื่อลดบทลงโทษตอนตาย 1 วัน"},
-      {id:"silvervine-premium-all", name:"Silvervine 6 ea", img:"006417_silvervine_fruit.png", phase:"account", use:["race"], priority:"optional", qty:"6 / ผู้แข่ง", tags:[], desc:"เหมารวมทุกบัฟ Premium Service Staff 1 วัน: EXP, Drop, ลดบทลงโทษตอนตาย"},
+      {id:"premium", name:"Premium Service Box", img:"23207_premium_service_box.png", img2:"23165_premium_service_staff.png", phase:"account", use:["race"], priority:"required", qty:"1 ชิ้น", tags:[], desc:"เปิด Premium Service Box แล้วได้ Premium Service Staff; กดบัฟก่อนแข่งได้เลยเพราะอยู่ 1 วัน"},
       {id:"pre-register", name:"[6th] Anniversary Pre-Register Gift", img:"106243_2026_new_year_gift_box_preregister_gift.png", phase:"account", use:["race"], priority:"required", qty:"1 / RO ID", tags:["วันเปิด server"], desc:"ของที่เข้า rodex วันเปิด server ก่อนแข่ง"},
 
       {id:"jellopy", name:"Jellopy", img:"000909_jellopy.png", phase:"exp", use:["practice"], priority:"required", qty:"100 อัน", tags:[], desc:"อย่าลืมเตรียม Jellopy 100 อัน เพื่อแลก Booster Combat Manual 3 เล่มสำหรับวันซ้อม"},
-      {id:"battle-manual-200-box", name:"Battle Manual 200 Box", img:"101080_battle_manual_200_box.png", img2:"101079_battle_manual_200.png", phase:"exp", use:["race"], priority:"required", qty:"ตามงบ", tags:[], desc:"เปิดกล่องแล้วได้ Battle Manual 200 จำนวน 10 เล่ม; แต่ละเล่มให้ EXP +200% ใช้เป็น manual หลักวันแข่ง"},
-      {id:"battle-manual-200", name:"Battle Manual 200", img:"101079_battle_manual_200.png", phase:"exp", use:["race"], priority:"required", qty:"10 เล่ม / กล่อง", tags:[], desc:"manual คูณ 200 สำหรับช่วงเร่งเลเวลวันแข่ง"},
+      {id:"battle-manual-200-box", name:"Battle Manual 200 Box", img:"101080_battle_manual_200_box.png", img2:"101079_battle_manual_200.png", phase:"exp", use:["race"], priority:"required", qty:"ตามงบ", tags:[], desc:"เปิด Battle Manual 200 Box แล้วได้ Battle Manual 200 จำนวน 10 เล่ม; แต่ละเล่มให้ EXP +200% ใช้เป็น manual หลักวันแข่ง"},
       {id:"booster-adv-manual", name:"Booster Advance Battle Manual", img:"101475_booster_advance_battle_manual.png", phase:"exp", use:["race"], priority:"ยืนยัน", qty:"ยังไม่พบใน pack รอบนี้", tags:["รอยืนยัน"], desc:"เช็กหน้าเว็บทางการ 6th Anniversary Booster Pack แล้ว ยังไม่พบว่าแจกจาก pack เลเวลใดในรอบนี้; ถ้ามีจะเป็น manual EXP +200%"},
       {id:"booster-combat-manual", name:"Booster Combat Manual", img:"101474_booster_combat_manual.png", phase:"exp", use:["practice","race"], priority:"required", qty:"3 เล่มจาก Jellopy 100 อัน", tags:[], desc:"วันซ้อมใช้ manual EXP +100% ตัวนี้เป็นหลัก ได้จากการแลก Jellopy 100 อัน; วันแข่งใช้เป็นแผนสำรองเมื่อ manual +200 หมด"},
       {id:"he-manual", name:"HE Battle Manual", img:"12411_he_battle_manual.png", phase:"exp", use:["race"], priority:"optional", qty:"ถ้ามี", tags:[], desc:"ตัวเลือก manual EXP +100% สำรองวันแข่ง"},
       {id:"battle-manual", name:"Battle Manual & Bubble Gum", img:"14799_battle_manual_bubble_gum.png", phase:"exp", use:["race"], priority:"optional", qty:"ถ้ามี", tags:[], desc:"ตัวเลือก manual EXP +50% ใช้เมื่อของหลักไม่พอ"},
       {id:"kafra-buff", name:"Kafra Buff 7 Days", img:"101238_event_kafra_buff_7_days.png", phase:"exp", use:["race"], priority:"required", qty:"7 วัน", tags:[], desc:"ใช้ Kafra Buff EXP +50% แบบ 7 วันไปเลย เพราะวันแข่งต้องเก็บเลเวลหลายชั่วโมง"},
       {id:"malangdo", name:"Upgraded Malangdo Cat Can", img:"23962_upgraded_malangdo_cat_can.png", phase:"exp", use:["race"], priority:"required", qty:"1 ชิ้น", tags:[], desc:"เพิ่ม EXP +20%; ถ้ามีแค่ Malangdo Cat Can ธรรมดาให้จดไว้ว่าเป็น +10%"},
-      {id:"unicorn-buff", name:"Unicorn Blessing Buff", img:"i_research_report_unicorn_blessing_buff.png", phase:"exp", use:["race"], priority:"required", qty:"60 นาที", tags:[], desc:"EXP +100% จังหวะหลักคือกดหลัง Class 4 พร้อม และก่อนเริ่มฆ่ามอนต่อเนื่องใน Sunken Tower"},
-      {id:"job-manual", name:"Job Manual", img:"14606_job_manual.png", phase:"exp", use:["practice","race"], priority:"required", qty:"แบงค์", tags:[], desc:"แบงค์กดเพื่อเร่ง Job ไปหา Convenio"},
+      {id:"unicorn-buff", name:"Unicorn Blessing Buff", img:"i_research_report_unicorn_blessing_buff.png", phase:"exp", use:["race"], priority:"required", qty:"2 รอบ", tags:[], desc:"เตรียมกด 2 รอบ รอบละ 60 นาที; EXP +100% กดในดันน้ำรั่วหรือดันกิจ"},
+      {id:"job-manual", name:"Job Manual", img:"14606_job_manual.png", phase:"exp", use:["practice","race"], priority:"required", qty:"แบงค์", tags:[], desc:"แบงค์กดเพื่อเร่ง Job ให้ได้สกิลดึง Convenio"},
 
-      {id:"all-in-one", name:"[Event] All In One Potion", img:"100906_event_all_in_one_potion.png", phase:"damage", use:["race"], priority:"required", qty:"หลายขวด", tags:["หลักวันจริง"], desc:"บัฟหลักวันแข่ง รวมหลายบัฟพื้นฐานไว้ในขวดเดียว นาน 60 นาที; ตอนซ้อมไม่ใช้เพราะหายาก"},
-      {id:"def-scroll", name:"DEF Scroll", img:"23204_def_scroll_shining_def_scroll.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"สำรอง", tags:["ห้ามซ้ำ All In One Potion"], desc:"เพิ่ม DEF/ความถึก ใช้เฉพาะถ้าไม่ได้ใช้ All In One Potion หรือใช้เป็นแผนสำรองตามคำสั่ง"},
-      {id:"red-herb", name:"Red Herb Activator", img:"100232_red_herb_activator.png", phase:"damage", use:["practice","race"], priority:"required", qty:"สายกาย", tags:["กายภาพ +15%"], desc:"เพิ่ม melee physical damage และ long ranged physical damage +15%; ใช้กับสายกายภาพ เช่น WH / SX / IG"},
-      {id:"blue-herb", name:"Blue Herb Activator", img:"100233_blue_herb_activator.png", phase:"damage", use:["practice","race"], priority:"required", qty:"สายเวทย์", tags:["เวทย์ +15%"], desc:"เพิ่ม all property magical damage +15%; ใช้กับสายเวทย์ เช่น AM / EM หรือคนที่ช่วยยิง Comet"},
-      {id:"concentration", name:"Concentration Potion", img:"000645_concentration_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["ASPD"], desc:"เพิ่ม ASPD +10% นาน 30 นาที ใช้เป็น potion เร่งโจมตีขั้นต้น"},
-      {id:"awakening", name:"Awakening Potion", img:"000656_awakening_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["ASPD"], desc:"เพิ่ม ASPD +15% นาน 30 นาที ใช้แทน Concentration เมื่อเลเวล/อาชีพถึง"},
-      {id:"berserk", name:"Berserk Potion", img:"000657_berserk_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["ASPD"], desc:"เพิ่ม ASPD +20% นาน 30 นาที เป็นตัวแรงสุดถ้าอาชีพใช้ได้"},
-      {id:"suprem-pill", name:"Suprem Battle Pill", img:"12792_suprem_battle_pill.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามแผน", tags:[], desc:"คุณสมบัติ: ATK/MATK +10%, Max HP/SP -5%, นาน 10 นาที"},
-      {id:"red-booster", name:"Red Booster", img:"12796_red_booster.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามแผน", tags:[], desc:"ใช้เสริมจาก All In One Potion ตามแผนทีม; ATK/MATK +30, ASPD +5%, VCT -5%, Max HP/SP -10%"},
-      {id:"almighty", name:"Almighty", img:"12883_almighty.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["ห้ามซ้ำ All In One Potion"], desc:"All stats +10, ATK/MATK +30; All In One Potion รวมไว้แล้ว"},
-      {id:"abrasive", name:"Abrasive", img:"14536_abrasive.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"สายกายคริ", tags:["คริ"], desc:"เพิ่ม Crit +30 ใช้กับสายกายภาพที่พึ่งคริ เช่น กอล์ฟ, เจ หรือ ตูนถ้าเล่น Cannon Spear"},
-      {id:"tyr", name:"Blessing Of Tyr", img:"14601_blessing_of_tyr.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["ห้ามซ้ำ All In One Potion"], desc:"ATK/MATK +20, HIT/FLEE +30; All In One Potion รวมไว้แล้ว"},
-      {id:"power-booster", name:"Power Booster / Limit Power Booster", img:"14766_limit_power_booster.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["ห้ามซ้ำ All In One Potion"], desc:"ATK/MATK +30, ATK/MATK +1%, HIT/FLEE +30, ASPD +1, ลด SP cost และ fixed cast; All In One Potion รวมไว้แล้ว"},
-      {id:"unlimited-drink", name:"Unlimited Drink", img:"23727_unlimited_drink.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["ห้ามซ้ำ All In One Potion"], desc:"Max HP/SP +5%, เพิ่ม damage บางสาย +5%, กันร่ายโดนขัด; All In One Potion รวมไว้แล้ว"},
-      {id:"full-swing", name:"Full SwingK", img:"12418_full_swingk.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"สายกาย", tags:["กายภาพ"], desc:"เพิ่ม ATK ใช้ในสายกายภาพ"},
-      {id:"mana-plus", name:"Mana +", img:"12419_mana_plus.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"สายเวทย์", tags:["เวทย์"], desc:"เพิ่ม MATK ใช้ในสายเวทย์"},
+      {id:"all-in-one", name:"[Event] All In One Potion", img:"100906_event_all_in_one_potion.png", phase:"damage", use:["race"], priority:"required", qty:"หลายขวด", tags:["60 นาที", "หลักวันจริง"], desc:"บัฟหลักวันแข่ง รวมหลายบัฟพื้นฐานไว้ในขวดเดียว นาน 60 นาที"},
+      {id:"def-scroll", name:"DEF Scroll", img:"23204_def_scroll_shining_def_scroll.png", phase:"damage", use:["practice"], priority:"optional", qty:"ตอนซ้อม", tags:["10 นาที", "ห้ามซ้ำ All In One Potion"], desc:"ใช้เฉพาะตอนซ้อมถ้าไม่ได้ใช้ [Event] All In One Potion; วันแข่งตัดออกเพราะ All In One Potion แจกเพียงพอแล้ว"},
+      {id:"red-herb", name:"Red Herb Activator", img:"100232_red_herb_activator.png", phase:"damage", damageClass:"physical", use:["practice","race"], priority:"required", qty:"สายกาย", tags:["500 วิ", "กายภาพ +15%"], desc:"เพิ่ม melee physical damage และ long ranged physical damage +15%; ใช้กับสายกายภาพ เช่น WH / SX / IG"},
+      {id:"blue-herb", name:"Blue Herb Activator", img:"100233_blue_herb_activator.png", phase:"damage", damageClass:"magical", use:["practice","race"], priority:"required", qty:"สายเวทย์", tags:["500 วิ", "เวทย์ +15%"], desc:"เพิ่ม all property magical damage +15%; ใช้กับสายเวทย์ เช่น AM / EM หรือคนที่ช่วยยิง Comet"},
+      {id:"magic-amplification-scroll-box", name:"Magic Amplification Scroll 50 Box", img:"16851_magic_amplification_scroll_50_box.png", img2:"14593_mystical_amplification_scroll.png", phase:"damage", damageClass:"magical", use:["race"], priority:"required", qty:"สายเวทย์ / วันแข่ง", tags:["60 วิ", "เวทย์", "วันแข่ง"], desc:"เปิด Magic Amplification Scroll 50 Box แล้วได้ Mystical Amplification Scroll 50 ใบ; ใช้กด Mystical Amplification Lv.10 เพิ่มความแรง Comet"},
+      {id:"ocean-noodle", name:"Summer Festival Noodle", img:"103065_summer_festival_noodle.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"เพิ่ม Damage ทางกายภาพ/เวทมนตร์ต่อศัตรูทุกธาตุ 10% เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"ocean-calamari", name:"Herb Calamari Barbecue", img:"103066_herb_calamari_barbecue.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"เพิ่ม Damage ทางกายภาพ/เวทมนตร์ต่อศัตรูทุกขนาด 10% เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"ocean-watermelon-pudding", name:"Sweet Watermelon Pudding", img:"103067_sweet_watermelon_pudding.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"เพิ่ม Damage กายภาพระยะใกล้/ไกล 10% และ Damage เวทมนตร์ทุกธาตุ 10% เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"ocean-watermelon-juice", name:"Cold Watermelon Juice", img:"103068_cold_watermelon_juice.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"ATK +15%, MATK +15% เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"ocean-red-beans-bingsu", name:"Cold Red Beans Bingsu", img:"103069_cold_red_beans_bingsu.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"MHP +10%, MSP +10% เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"ocean-popcorn", name:"Gourmet Butter Popcorn", img:"103070_gourmet_butter_popcorn.png", phase:"damage", use:["race"], priority:"optional", qty:"ตามแผน", tags:["Ocean Week", "15 นาที"], desc:"ลดระยะเวลาร่ายแบบแปรผัน 10%, ASPD +2 เป็นเวลา 15 นาที; แลกด้วย Festival Food Bag 5 ea + 5,000 Zeny"},
+      {id:"concentration", name:"Concentration Potion", img:"000645_concentration_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["30 นาที", "ASPD"], desc:"เพิ่ม ASPD +10% นาน 30 นาที ใช้เป็น potion เร่งโจมตีขั้นต้น"},
+      {id:"awakening", name:"Awakening Potion", img:"000656_awakening_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["30 นาที", "ASPD"], desc:"เพิ่ม ASPD +15% นาน 30 นาที ใช้แทน Concentration เมื่อเลเวล/อาชีพถึง"},
+      {id:"berserk", name:"Berserk Potion", img:"000657_berserk_potion.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามอาชีพ", tags:["30 นาที", "ASPD"], desc:"เพิ่ม ASPD +20% นาน 30 นาที เป็นตัวเร็วสุดถ้าอาชีพใช้ได้"},
+      {id:"suprem-pill", name:"Suprem Battle Pill", img:"12792_suprem_battle_pill.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามแผน", tags:["10 นาที"], desc:"คุณสมบัติ: ATK/MATK +10%, Max HP/SP -5%, นาน 10 นาที"},
+      {id:"red-booster", name:"Red Booster", img:"12796_red_booster.png", phase:"damage", use:["practice","race"], priority:"optional", qty:"ตามแผน", tags:["30 นาที"], desc:"ใช้เสริมจาก All In One Potion; ATK/MATK +30, ASPD +5%, VCT -5%, Max HP/SP -10%"},
+      {id:"almighty", name:"Almighty", img:"12883_almighty.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["30 นาที", "ห้ามซ้ำ All In One Potion"], desc:"All stats +10, ATK/MATK +30; All In One Potion รวมไว้แล้ว"},
+      {id:"abrasive", name:"Abrasive", img:"14536_abrasive.png", phase:"damage", damageClass:"physical", use:["practice","race"], priority:"optional", qty:"สายกายคริ", tags:["5 นาที", "คริ"], desc:"เพิ่ม Crit +30 ใช้กับสายกายภาพที่พึ่งคริ เช่น กอล์ฟ, เจ หรือ ตูนถ้าเล่น Cannon Spear"},
+      {id:"tyr", name:"Blessing Of Tyr", img:"14601_blessing_of_tyr.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["5 นาที", "ห้ามซ้ำ All In One Potion"], desc:"ATK/MATK +20, HIT/FLEE +30; All In One Potion รวมไว้แล้ว"},
+      {id:"power-booster", name:"Power Booster / Limit Power Booster", img:"14766_limit_power_booster.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["30 นาที", "ห้ามซ้ำ All In One Potion"], desc:"ATK/MATK +30, ATK/MATK +1%, HIT/FLEE +30, ASPD +1, ลด SP cost และ fixed cast; All In One Potion รวมไว้แล้ว"},
+      {id:"unlimited-drink", name:"Unlimited Drink", img:"23727_unlimited_drink.png", phase:"damage", use:["practice"], priority:"optional", qty:"ถ้าไม่ใช้ All In One Potion", tags:["30 นาที", "ห้ามซ้ำ All In One Potion"], desc:"Max HP/SP +5%, เพิ่ม damage บางสาย +5%, กันร่ายโดนขัด; All In One Potion รวมไว้แล้ว"},
+      {id:"full-swing", name:"Full SwingK", img:"12418_full_swingk.png", phase:"damage", damageClass:"physical", use:["practice","race"], priority:"optional", qty:"สายกาย", tags:["500 วิ", "กายภาพ"], desc:"เพิ่ม ATK ใช้ในสายกายภาพ"},
+      {id:"mana-plus", name:"Mana +", img:"12419_mana_plus.png", phase:"damage", damageClass:"magical", use:["practice","race"], priority:"optional", qty:"สายเวทย์", tags:["500 วิ", "เวทย์"], desc:"เพิ่ม MATK ใช้ในสายเวทย์"},
 
-      {id:"world-ticket", name:"[Not For Sale] World Moving Ticket", img:"25464_world_moving_ticket.png", phase:"utility", use:["practice","race"], priority:"required", qty:"50 / ผู้แข่ง", tags:["ย้ายแมพ"], desc:"ใช้ย้ายแมพระหว่างเส้นทางหลังจัดบัฟครบ"},
-      {id:"fly-wing", name:"Fly Wing", img:"000601_fly_wing.png", phase:"utility", use:["practice","race"], priority:"required", qty:"สำรอง", tags:[], desc:"วันซ้อมใช้ได้ตามสะดวก วันจริงเป็นแผนสำรองถ้า Unlimited Wing มีปัญหา"},
+      {id:"world-ticket", name:"[Not For Sale] World Moving Ticket", img:"25464_world_moving_ticket.png", phase:"utility", use:["practice","race"], priority:"required", qty:"50 / ผู้แข่ง", tags:["ย้ายแมพ"], desc:"ใช้ย้ายแมพ"},
+      {id:"fly-wing", name:"Fly Wing", img:"000601_fly_wing.png", phase:"utility", use:["practice","race"], priority:"required", qty:"สำรอง", tags:[], desc:"วันซ้อมใช้ได้ตามสะดวก วันจริงมีสำรองถ้าไม่มี Unlimited Wing"},
       {id:"beginner-fly", name:"Beginner Fly Wing", img:"23280_beginner_fly_wing.png", phase:"utility", use:["practice"], priority:"optional", qty:"ช่วงต้น", tags:[], desc:"ใช้ซ้อมช่วงเลเวลต่ำ"},
       {id:"cps-fly", name:"Cps Fly Wing", img:"23288_cps_fly_wing_fallback_zipped_fly_wings.png", phase:"utility", use:["practice"], priority:"optional", qty:"ถ้ามี", tags:[], desc:"รูปถูกแล้ว กลุ่ม Fly Wing ใช้ icon เหมือนกัน"},
-      {id:"unlimited-fly", name:"Unlimited Wing of Fly 1 Day", img:"17251_unlimited_wing_of_fly_3day_box.png", img2:"12887_unlimited_wing_of_fly_1day.png", phase:"utility", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:[], desc:"ในเกมจริงใช้รูป 3day box และเปิดมาได้ Unlimited Wing Of Fly (1 Day) สำหรับวิงไม่จำกัด"},
-      {id:"butterfly", name:"Butterfly Wing", img:"000602_butterfly_wing.png", phase:"utility", use:["practice","race"], priority:"required", qty:"2+ / ผู้แข่ง", tags:["จุติ"], desc:"กลับ Prontera หลังถูกส่งกลับเมืองเกิด และหลังเปลี่ยน High Class 1"},
-      {id:"guyak", name:"Guyak Pudding", img:"12710_guyak_pudding.png", phase:"utility", use:["practice","race"], priority:"required", qty:"1+ / ผู้แข่ง", tags:["จุติ"], desc:"ใช้วิ่งขั้นตอนจุติหลัง Lv99 ที่ Juno"},
-      {id:"token", name:"[Limited] Token of Ziegfried", img:"006833_limited_token_of_ziegfried.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:["ชุบชีวิต"], desc:"ฟื้นตัวเอง ณ จุดที่ตาย โดยเฉพาะแมพข้ามขั้น/Sunken/Varmundt"},
-      {id:"leaf", name:"Yggdrasil Leaf", img:"000610_yggdrasil_leaf.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:["ชุบชีวิต"], desc:"ใช้ชุบเพื่อน"},
-      {id:"kafra-bell", name:"Kafra Bell Box / Kafra Storage Bell", img:"17921_kafra_storage_bell_box.png", img2:"23648_kafra_storage_bell.png", phase:"utility", use:["race"], priority:"optional", qty:"คนที่ต้องเปิดคลัง", tags:["แพง/หายาก"], desc:"เปิดกล่องแล้วได้ Kafra Storage Bell สำหรับเปิดคลัง; ไม่ใช้ตอนซ้อมเพราะแพง/หายาก"},
-      {id:"cat-hand", name:"Endless Cat Hand Ticket 7day Box", img:"009553_cat_hand_ticket_7_days.png", img2:"22998_endless_cat_hand_ticket.png", phase:"utility", use:["race"], priority:"optional", qty:"ตามแผน", tags:["แพง/หายาก"], desc:"เปิดกล่องแล้วได้ Endless Cat Hand Ticket 7day สำหรับเปิดคลัง/บริการ; ไม่ใช้ตอนซ้อม"},
-      {id:"kafra-card", name:"Kafra Card", img:"12442_kafra_card.png", phase:"utility", use:["race"], priority:"optional", qty:"ตามแผน", tags:[], desc:"ตัวช่วยส่ง/เปิดบริการให้ตัวละครแข่งก่อนออกตัว"},
-      {id:"miracle", name:"Miracle Medicine", img:"12261_miracle_medicine.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ยาเรดิก แผนสำรอง", tags:["90-99"], desc:"เพิ่ม 1 เลเวล ใช้ตอนใกล้ 99 แทนแผน voucher"},
+      {id:"unlimited-fly", name:"Unlimited Wing of Fly 3 Day Box", img:"17251_unlimited_wing_of_fly_3day_box.png", img2:"12887_unlimited_wing_of_fly_1day.png", phase:"utility", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:[], desc:"เปิด Unlimited Wing of Fly 3 Day Box แล้วได้ Unlimited Wing Of Fly (1 Day) สำหรับวิงไม่จำกัด"},
+      {id:"butterfly", name:"Butterfly Wing", img:"000602_butterfly_wing.png", phase:"utility", use:["practice","race"], priority:"required", qty:"2+ / ผู้แข่ง", tags:["จุติ"], desc:"กลับจุดเซฟหลัก"},
+      {id:"guyak", name:"Guyak Pudding", img:"12710_guyak_pudding.png", phase:"utility", use:["practice","race"], priority:"required", qty:"1+ / ผู้แข่ง", tags:["จุติ"], desc:"ใช้วิ่งตอนจุติ วิ่งฆ่ามอนดันกิจ"},
+      {id:"token", name:"[Limited] Token of Ziegfried", img:"006833_limited_token_of_ziegfried.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:["ชุบชีวิต"], desc:"ตายแล้วเกิดทันที่ จะได้ไม่เสียเวลากลับมาใหม่แล้ว เวลห่างจากเพื่อน"},
+      {id:"leaf", name:"Yggdrasil Leaf", img:"000610_yggdrasil_leaf.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:["ชุบชีวิต"], desc:"ใช้ชุบเพื่อน ที่ลืมเอาตายเกิดมา"},
+      {id:"kafra-bell", name:"Kafra Bell Box", img:"17921_kafra_storage_bell_box.png", img2:"23648_kafra_storage_bell.png", phase:"utility", use:["race"], priority:"optional", qty:"คนที่ต้องเปิดคลัง", tags:["แพง/หายาก"], desc:"เปิด Kafra Bell Box แล้วได้ Kafra Storage Bell สำหรับเปิดคลัง Kafra"},
+      {id:"cat-hand", name:"Endless Cat Hand Ticket 7day Box", img:"009553_cat_hand_ticket_7_days.png", img2:"22998_endless_cat_hand_ticket.png", phase:"utility", use:["race"], priority:"optional", qty:"ตามแผน", tags:["แพง/หายาก"], desc:"เปิด Endless Cat Hand Ticket 7day Box แล้วได้ Endless Cat Hand Ticket สำหรับเปิดคลัง/บริการ; ไม่ใช้ตอนซ้อม"},
+      {id:"kafra-card", name:"Kafra Card", img:"12442_kafra_card.png", phase:"utility", use:["race"], priority:"optional", qty:"ตามแผน", tags:[], desc:"ให้อีกตัวส่งให้ Novice เพื่อเปิดคลังตั้งแต่ Lv1"},
+      {id:"miracle", name:"Miracle Medicine", img:"12261_miracle_medicine.png", phase:"utility", use:["practice","race"], priority:"required", qty:"ยาเรดิก แผนสำรอง", tags:["90-99"], desc:"เพิ่ม 1 เลเวล ตอน Lv80+ - lv120"},
 
-      {id:"booster-pack-1", name:"Booster Pack (1)", img:"100856_booster_pack_1.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"วันจริงเปิดเพื่อเอา Booster Call"},
-      {id:"booster-pack-80", name:"Booster Pack (80)", img:"100861_booster_pack_75.png", phase:"booster", use:["race"], priority:"ยืนยัน", qty:"1", tags:["รอยืนยันรูป"], desc:"เปิดเพื่อรับ Level UP Voucher(80~89) และ Booster Pack (90); รูปอาจต้องยืนยันจากของจริงอีกครั้ง"},
-      {id:"booster-pack-90", name:"Booster Pack (90)", img:"100862_booster_pack_90.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"วันจริงเปิดเพื่อยืนยันจำนวน Level UP Voucher(90~98)"},
-      {id:"booster-pack-100", name:"Booster Pack (100)", img:"100863_booster_pack_100.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"เปิดตอน Lv100; หน้าเว็บทางการระบุว่าชุดนี้มี Booster Combat Manual และ [Event] Episode 16 Clear Ticket"},
-      {id:"voucher-80", name:"Level UP Voucher(80~89)", img:"1000989_level_up_voucher_80_89.png", phase:"booster", use:["race"], priority:"ยืนยัน", qty:"1 หรือ 3", tags:["80-89"], desc:"วันแข่งใช้ตามคำสั่งหัวหน้าทีม; ตอนซ้อมใช้ Miracle Medicine / ยาเรดิกแทน"},
-      {id:"voucher-90", name:"Level UP Voucher(90~98)", img:"1000990_level_up_voucher_90_98.png", phase:"booster", use:["race"], priority:"ยืนยัน", qty:"1 หรือ 3", tags:["90-98"], desc:"ใช้ปิดช่วง 90-99 ตามจำนวนใบจริง; ตอนซ้อมใช้ Miracle Medicine / ยาเรดิกแทน"},
-      {id:"third-pass-box", name:"3rd Test Pass Box", img:"17184_3rd_test_pass_box.png", img2:"006583_3rd_test_pass.png", phase:"booster", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:[], desc:"เปิดกล่องแล้วได้ 3rd Test Pass; วันจริงใช้ลดเวลารอเปลี่ยน Class 3 รอบหลัง Lv99; วันซ้อมไม่ใช้"},
-      {id:"third-pass", name:"3rd Test Pass", img:"006583_3rd_test_pass.png", phase:"booster", use:["race"], priority:"required", qty:"ในกล่อง", tags:[], desc:"เช็กว่าเปิดกล่องแล้วได้ใบจริง"},
-      {id:"episode16", name:"Episode 16 Clear Ticket", img:"1000283_episode_16_clear_ticket.png", phase:"booster", use:["race"], priority:"required", qty:"ผู้แข่งทุกคน", tags:["จอร์"], desc:"หน้าเว็บทางการ Booster Pack Normal ระบุว่าได้จากรางวัล Lv100 / Booster Pack (100)"},
-      {id:"episode17", name:"[Event] Episode 17 Clear Ticket", img:"1000287_episode_17_clear_ticket.png", phase:"booster", use:["race"], priority:"optional", qty:"2 ใบถ้าไม่มี", tags:["จอร์"], desc:"ถ้ายังไม่เคลียร์ Episode 17 ต้องใช้ 2 ใบ; ซื้อด้วย Silvervine 10/ใบ รวม 20 Silvervine"},
-      {id:"episode18", name:"[Event] Episode 18 Clear Ticket", img:"1000288_episode_18_clear_ticket.png", phase:"booster", use:["race"], priority:"optional", qty:"1 ใบถ้าไม่มี", tags:["จอร์"], desc:"ถ้ายังไม่เคลียร์ Episode 18 ต้องใช้ 1 ใบ; ซื้อด้วย Silvervine 10"},
+      {id:"booster-pack-1", name:"Booster Pack (1)", img:"100856_booster_pack_1.png", img2:"101473_booster_call.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"เปิด Booster Pack (1) แล้วได้ Booster Call"},
+      {id:"booster-pack-80", name:"Booster Pack (80)", img:"100861_booster_pack_75.png", img2:"1000989_level_up_voucher_80_89.png", phase:"booster", use:["race"], priority:"ยืนยัน", qty:"1", tags:["รอยืนยันรูป"], desc:"เปิด Booster Pack (80) แล้วได้ Level UP Voucher(80~89); รูปกล่องอาจต้องยืนยันจากของจริงอีกครั้ง"},
+      {id:"booster-pack-90", name:"Booster Pack (90)", img:"100862_booster_pack_90.png", img2:"1000990_level_up_voucher_90_98.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"เปิด Booster Pack (90) แล้วได้ Level UP Voucher(90~98)"},
+      {id:"booster-pack-100", name:"Booster Pack (100)", img:"100863_booster_pack_100.png", img2:"1000283_episode_16_clear_ticket.png", phase:"booster", use:["race"], priority:"required", qty:"1", tags:[], desc:"เปิด Booster Pack (100) แล้วได้ Episode 16 Clear Ticket"},
+      {id:"third-pass-box", name:"3rd Test Pass Box", img:"17184_3rd_test_pass_box.png", img2:"006583_3rd_test_pass.png", phase:"booster", use:["race"], priority:"required", qty:"1 / ผู้แข่ง", tags:[], desc:"เปิด 3rd Test Pass Box แล้วได้ 3rd Test Pass; วันจริงใช้ลดเวลารอเปลี่ยน Class 3 รอบหลัง Lv99; วันซ้อมไม่ใช้"},
+      {id:"episode17", name:"[Event] Episode 17 Clear Ticket", img:"1000287_episode_17_clear_ticket.png", phase:"booster", use:["race"], priority:"optional", qty:"2 ใบถ้าไม่มี", tags:["จอร์"], desc:"ถ้ายังไม่เคลียร์ Episode 17 ต้องใช้ 2 ใบ; ซื้อด้วย Silvervine 10/ใบ รวม 20 Silvervine", silvervineCost:{optionalMin:20, optionalMax:20}},
+      {id:"episode18", name:"[Event] Episode 18 Clear Ticket", img:"1000288_episode_18_clear_ticket.png", phase:"booster", use:["race"], priority:"optional", qty:"1 ใบถ้าไม่มี", tags:["จอร์"], desc:"ถ้ายังไม่เคลียร์ Episode 18 ต้องใช้ 1 ใบ; ซื้อด้วย Silvervine 10", silvervineCost:{optionalMin:10, optionalMax:10}},
 
     ];
     const phases = [
@@ -240,31 +271,100 @@
     const expandedGroups = new Set();
     const stateKey = "ro-item-visual-checklist-v1";
     const checked = JSON.parse(localStorage.getItem(stateKey) || "{}");
+    if (!checked["premium-silvervine-choice"]) {
+      const legacyPremium = {};
+      if (checked["silvervine-premium-all"]) legacyPremium.all = true;
+      if (!legacyPremium.all) {
+        if (checked["silvervine-premium-exp"]) legacyPremium.exp = true;
+        if (checked["silvervine-premium-drop"]) legacyPremium.drop = true;
+        if (checked["silvervine-death"]) legacyPremium.death = true;
+      }
+      if (Object.keys(legacyPremium).length) checked["premium-silvervine-choice"] = legacyPremium;
+    }
     const $ = id => document.getElementById(id);
+    function choiceState(item){ return checked[item.id] && typeof checked[item.id] === "object" ? checked[item.id] : {}; }
+    function itemDone(item){
+      if (!item.choiceOptions) return Boolean(checked[item.id]);
+      if (item.id === "premium-silvervine-choice") {
+        const state = choiceState(item);
+        return Boolean(state.all || state.exp);
+      }
+      return item.choiceOptions.some(option => choiceState(item)[option.id]);
+    }
+    function formatEa(min, max){
+      if (!min && !max) return "";
+      return min === max ? `${min} ea` : `${min}-${max} ea`;
+    }
+    function premiumSilvervineSummary(item){
+      if (item.id !== "premium-silvervine-choice") return null;
+      const state = choiceState(item);
+      if (state.all) return {requiredMin:6, requiredMax:6};
+      const picked = item.choiceOptions.filter(option => option.id !== "all" && state[option.id]);
+      const optional = picked.filter(option => option.id !== "exp").reduce((sum, option) => sum + (option.silvervineCost || 0), 0);
+      const total = 4 + optional;
+      return {requiredMin:total, requiredMax:total};
+    }
+    function silvervineSummary(list){
+      let requiredMin = 0, requiredMax = 0, optionalMin = 0, optionalMax = 0;
+      const notes = [];
+      let checkedMin = 0, checkedMax = 0;
+      list.forEach(item => {
+        const premium = premiumSilvervineSummary(item);
+        if (premium) {
+          if (premium.requiredMin) {
+            requiredMin += premium.requiredMin;
+            requiredMax += premium.requiredMax;
+            if (itemDone(item)) {
+              checkedMin += premium.requiredMin;
+              checkedMax += premium.requiredMax;
+            }
+          }
+          if (premium.note) notes.push(premium.note);
+          return;
+        }
+        if (item.id === "silvervine-class4") return;
+        if (!item.silvervineCost) return;
+        const itemRequiredMin = item.silvervineCost.requiredMin || 0;
+        const itemRequiredMax = item.silvervineCost.requiredMax || item.silvervineCost.requiredMin || 0;
+        requiredMin += itemRequiredMin;
+        requiredMax += itemRequiredMax;
+        if (itemDone(item)) {
+          checkedMin += itemRequiredMin;
+          checkedMax += itemRequiredMax;
+        }
+        optionalMin += item.silvervineCost.optionalMin || 0;
+        optionalMax += item.silvervineCost.optionalMax || item.silvervineCost.optionalMin || 0;
+      });
+      const parts = [];
+      if (requiredMin || requiredMax) parts.push(`Silvervine เช็กแล้ว ${formatEa(checkedMin, checkedMax)} / ${formatEa(requiredMin, requiredMax)}`);
+      if (optionalMin || optionalMax) parts.push(`ทางเลือก +${formatEa(optionalMin, optionalMax)}`);
+      if (notes.length) parts.push(notes.join(", "));
+      if (list.some(item => item.id === "silvervine-class4")) parts.push("ไม่รวม Class 4 100 ea");
+      return parts.length ? parts.join(" | ") : "";
+    }
     function save(){ localStorage.setItem(stateKey, JSON.stringify(checked)); }
     function itemVisible(item){
       const text = ($("search").value || "").trim().toLowerCase();
       const pri = $("priority").value;
-      const blob = [item.name,item.phase,item.priority,item.qty,item.desc,...item.tags,item.use.join(" ")].join(" ").toLowerCase();
+      const choices = item.choiceOptions ? item.choiceOptions.flatMap(option => [option.label, option.desc]) : [];
+      const blob = [item.name,item.phase,item.priority,item.qty,item.desc,...item.tags,...choices,item.use.join(" ")].join(" ").toLowerCase();
       if (mode !== "all" && mode !== "missing" && !item.use.includes(mode)) return false;
       if (mode === "missing" && item.img) return false;
       if (phase !== "all" && item.phase !== phase) return false;
       if (pri !== "all" && item.priority !== pri) return false;
-      if (openOnly && checked[item.id]) return false;
+      if (openOnly && itemDone(item)) return false;
       if (text && !blob.includes(text)) return false;
       return true;
     }
     function phaseLabel(id){ return phases.find(p => p[0] === id)?.[1] || id; }
     function renderStats(visible){
       const total = visible.length;
-      const done = visible.filter(i => checked[i.id]).length;
+      const done = visible.filter(itemDone).length;
       const required = visible.filter(i => i.priority === "required").length;
-      const missing = visible.filter(i => !i.img).length;
       const pct = total ? Math.round(done / total * 100) : 0;
       $("stats").innerHTML = [
-        ["ความคืบหน้า", `${done}/${total}`, `เช็กแล้ว ${pct}%`],
+        ["เช็คของที่มี", `${done}/${total}`, `เช็กแล้ว ${pct}%`],
         ["ต้องมี", required, "ของที่ควรมีพร้อมก่อนออกตัว"],
-        ["รูปหาย", missing, "รอแก้ Divine Pride ID"],
         ["โหมด", mode === "practice" ? "ตอนซ้อม" : "ตอนแข่ง", phase === "all" ? "ทุกหมวด" : phaseLabel(phase)]
       ].map(([label,value,sub]) => `<div class="metric"><div class="label">${label}</div><div class="value">${value}</div><div class="sub">${sub}</div></div>`).join("");
     }
@@ -276,38 +376,79 @@
       }).join("");
       document.querySelectorAll("[data-phase]").forEach(btn => btn.addEventListener("click", () => { phase = btn.dataset.phase; render(); }));
     }
+    function itemClass(item){
+      return ["item", itemDone(item) ? "done" : "", item.phase === "damage" && item.damageClass ? item.damageClass : ""].filter(Boolean).join(" ");
+    }
     function renderItem(item){
+      const done = itemDone(item);
       const tags = [
         ...item.use.map(u => `<span class="tag ${u}">${u === "practice" ? "ซ้อม" : "แข่ง"}</span>`),
         `<span class="tag ${item.priority === "required" ? "required" : item.priority === "ยืนยัน" ? "warn" : ""}">${item.priority === "required" ? "ต้องมี" : item.priority === "optional" ? "ทางเลือก" : item.priority}</span>`,
         ...item.tags.map(t => `<span class="tag ${t.includes("missing") ? "missing" : t.includes("รูปแทนชั่วคราว") ? "warn" : ""}">${t}</span>`)
       ].join("");
+      const options = item.choiceOptions ? `<div class="choice-options">${item.choiceOptions.map(option => `
+        <label class="choice-option">
+          <input class="choice-check" type="checkbox" data-choice-parent="${item.id}" data-choice-id="${option.id}" ${choiceState(item)[option.id] ? "checked" : ""}>
+          <span><span class="choice-title">${option.label}</span><span class="choice-desc">${option.desc}</span></span>
+        </label>`).join("")}</div>` : "";
       const firstIcon = item.img ? `<div class="iconbox"><img src="${asset}${item.img}" alt=""></div>` : `<div class="iconbox"><span class="missing-icon">NO ID</span></div>`;
       const secondIcon = item.img2 ? `<span class="arrow">›</span><div class="iconbox"><img src="${asset}${item.img2}" alt=""></div>` : "";
       const icon = `<div class="iconflow">${firstIcon}${secondIcon}</div>`;
-      return `<article class="item ${checked[item.id] ? "done" : ""}">
-        <input class="check" type="checkbox" data-id="${item.id}" ${checked[item.id] ? "checked" : ""} aria-label="${item.name}">
-        ${icon}
-        <div>
-          <h3 class="name">${item.name}</h3>
+      return `<article class="${itemClass(item)}" tabindex="0">
+        <input class="check" type="checkbox" data-id="${item.id}" ${done ? "checked" : ""} aria-label="${item.name}">
+        <div class="item-main">
+          <div class="item-head">
+            ${icon}
+            <h3 class="name">${item.name}</h3>
+          </div>
           <div class="meta"><span class="tag">${phaseLabel(item.phase)}</span><span class="tag qty">${item.qty}</span>${tags}</div>
           <p class="desc">${item.desc}</p>
+          ${options}
+          <div class="hover-detail">
+            <div class="meta"><span class="tag">${phaseLabel(item.phase)}</span><span class="tag qty">${item.qty}</span>${tags}</div>
+            <p class="desc">${item.desc}</p>
+            ${options}
+          </div>
         </div>
       </article>`;
+    }
+    function bindTooltips(){
+      document.querySelectorAll(".item").forEach(card => {
+        const placeTooltip = () => {
+          card.classList.remove("tooltip-up");
+          requestAnimationFrame(() => {
+            const detail = card.querySelector(".hover-detail");
+            if (!detail) return;
+            const rect = detail.getBoundingClientRect();
+            if (rect.bottom > window.innerHeight - 8) card.classList.add("tooltip-up");
+          });
+        };
+        card.addEventListener("mouseenter", placeTooltip);
+        card.addEventListener("focusin", placeTooltip);
+      });
     }
     function render(){
       const visible = items.filter(itemVisible);
       renderStats(visible);
       renderPhaseNav();
-      const byPhase = phases.map(([id,label]) => [id,label,visible.filter(i => i.phase === id)]).filter(([, , list]) => list.length);
+      const damageOrder = {all:0, physical:1, magical:2};
+      const orderedVisible = visible.map((item, index) => ({item, index})).sort((a, b) => {
+        if (a.item.phase === "damage" && b.item.phase === "damage") {
+          return (damageOrder[a.item.damageClass || "all"] - damageOrder[b.item.damageClass || "all"]) || (a.index - b.index);
+        }
+        return a.index - b.index;
+      }).map(entry => entry.item);
+      const byPhase = phases.map(([id,label]) => [id,label,orderedVisible.filter(i => i.phase === id)]).filter(([, , list]) => list.length);
       $("content").innerHTML = byPhase.length ? byPhase.map(([id,label,list]) => {
-        const done = list.filter(i => checked[i.id]).length;
+        const done = list.filter(itemDone).length;
         const expanded = !compact || expandedGroups.has(id);
+        const summary = silvervineSummary(list);
         return `<div class="group ${expanded ? "expanded" : ""}">
           <div class="group-head">
             <div><h2 class="group-title">${label}</h2><div class="group-sub">เช็กแล้ว ${done}/${list.length}</div></div>
             <button class="group-toggle ${expanded ? "" : "active"}" data-group-toggle="${id}">${expanded ? "ย่อ" : "ขยาย"}</button>
           </div>
+          ${summary ? `<div class="group-summary">${summary}</div>` : ""}
           <div class="items">${list.map(renderItem).join("")}</div>
         </div>`;
       }).join("") : `<div class="empty">ไม่พบไอเท็มตามตัวกรองตอนนี้</div>`;
@@ -328,8 +469,33 @@
         }
         render();
       }));
+      bindTooltips();
       document.querySelectorAll(".check").forEach(cb => cb.addEventListener("change", () => {
-        checked[cb.dataset.id] = cb.checked;
+        const item = items.find(i => i.id === cb.dataset.id);
+        if (item?.choiceOptions) {
+          checked[item.id] = cb.checked ? {exp:true} : {};
+        } else {
+          checked[cb.dataset.id] = cb.checked;
+        }
+        save();
+        render();
+      }));
+      document.querySelectorAll(".choice-check").forEach(cb => cb.addEventListener("change", event => {
+        event.stopPropagation();
+        const item = items.find(i => i.id === cb.dataset.choiceParent);
+        if (!item) return;
+        const state = {...choiceState(item)};
+        if (cb.dataset.choiceId === "all") {
+          checked[item.id] = cb.checked ? {all:true} : {};
+        } else {
+          if (cb.checked) {
+            delete state.all;
+            state[cb.dataset.choiceId] = true;
+          } else {
+            delete state[cb.dataset.choiceId];
+          }
+          checked[item.id] = state;
+        }
         save();
         render();
       }));
